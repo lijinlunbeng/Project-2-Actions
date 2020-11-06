@@ -1,7 +1,8 @@
 # Project-2-Actions
 
 
-This project include EC602 repository two projects, one is project 2 social media, and another one is project 4 pytests.
+This project include EC602 repository two projects, one is project 2 social media analyzer, and another one is project 4 pytests.
+So for aim of this, I tried to integrate two projects, which is meaning by using pytests to test my social media analyzer project
 
 If you want to know more information and details, please click below links.
 
