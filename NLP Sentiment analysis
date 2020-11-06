@@ -1,0 +1,34 @@
+from google.cloud import language
+from google.cloud.language import enums, types
+
+def analyze_text_sentiment(text):
+client = language.LanguageServiceClient()
+document = types.Document(
+content=text,
+type=enums.Document.Type.PLAIN_TEXT)
+
+response = client.analyze_sentiment(document=document)
+
+sentiment = response.document_sentiment
+results = [
+    ('text', text),
+    ('score', sentiment.score),
+    ('magnitude', sentiment.magnitude),
+]
+for k, v in results:
+    print('{:10}: {}'.format(k, v))
+//test what I want (text)
+text = 'This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun. But now it's gradually becoming toxic, even more than kpop or cpop. Especialy those unnecessary fanwars and bashing every girl near their bias'
+analyze_text_sentiment(text)
+
+
+
+// Results:
+
+In [5]: text = 'This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun. But now its gradually becoming toxic, even more than kpop or
+...: cpop. Especialy those unnecessary fanwars and bashing every girl near their bias'
+...: analyze_text_sentiment(text)
+text : This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun. But now its gradually becoming toxic, even more than kpop or cpop
+. Especialy those unnecessary fanwars and bashing every girl near their bias
+score : 0.0
+magnitude : 3.299999952316284

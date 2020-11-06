@@ -1,0 +1,78 @@
+from google.cloud import language
+from google.cloud.language import enums, types
+
+
+def analyze_text_entities(text):
+    client = language.LanguageServiceClient()
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT)
+
+    response = client.analyze_entities(document=document)
+
+    for entity in response.entities:
+        print('=' * 79)
+        results = [
+            ('name', entity.name),
+            ('type', enums.Entity.Type(entity.type).name),
+            ('salience', entity.salience),
+            ('wikipedia_url', entity.metadata.get('wikipedia_url', '-')),
+            ('mid', entity.metadata.get('mid', '-')),
+        ]
+        for k, v in results:
+            print('{:15}: {}'.format(k, v))
+            
+            
+// test my text        
+text = 'This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun. But now it's gradually becoming toxic, even more than kpop or cpop. Especialy those unnecessary fanwars and bashing every girl near their bias'
+analyze_text_entities(text)
+
+//results
+===============================================================================
+name           : thread
+type           : OTHER
+salience       : 0.83345627784729
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : fanwars
+type           : PERSON
+salience       : 0.04599432647228241
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : fandom r
+type           : OTHER
+salience       : 0.033811815083026886
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : thai star
+type           : OTHER
+salience       : 0.03340497240424156
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : bias
+type           : OTHER
+salience       : 0.016355805099010468
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : girl
+type           : PERSON
+salience       : 0.016355805099010468
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : kpop
+type           : OTHER
+salience       : 0.010310512036085129
+wikipedia_url  : -
+mid            : -
+===============================================================================
+name           : cpop
+type           : OTHER
+salience       : 0.010310512036085129
+wikipedia_url  : -
+mid            : -

@@ -1,0 +1,4218 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#Author - Prateek Mehta
+
+
+import tweepy #https://github.com/tweepy/tweepy
+import json
+
+
+#Twitter API credentials
+consumer_key = "yOn8TiBcEIO6jQGHDoaVXQOy0"
+consumer_secret = "jgJU47p5tKTzkLFt9fXhNrGpW4KPfioq0fDi8to1vgjiuZ3eQT"
+access_key = "1309951984741412864-Bwa61zLFSTYizyW03plTkG7nxfxSsT"
+access_secret = "HVF3588kI4IHvmFSG31VkXMD0y3eYdXOojtnHmTWKOmmF"
+
+
+def get_all_tweets(screen_name):
+    
+    #Twitter only allows access to a users most recent 3240 tweets with this method
+    
+    #authorize twitter, initialize tweepy
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
+    
+    #initialize a list to hold all the tweepy Tweets
+    alltweets = []    
+    
+    #make initial request for most recent tweets (200 is the maximum allowed count)
+    new_tweets = api.user_timeline(screen_name = screen_name,count=10)
+    
+    #save most recent tweets
+    alltweets.extend(new_tweets)
+    
+    #save the id of the oldest tweet less one
+    oldest = alltweets[-1].id - 1
+    
+    #keep grabbing tweets until there are no tweets left to grab
+    while len(new_tweets) > 0:
+        
+        #all subsiquent requests use the max_id param to prevent duplicates
+        new_tweets = api.user_timeline(screen_name = screen_name,count=10,max_id=oldest)
+        
+        #save most recent tweets
+        alltweets.extend(new_tweets)
+        
+        #update the id of the oldest tweet less one
+        oldest = alltweets[-1].id - 1
+        if(len(alltweets) > 15):
+            break
+        print ("...%s tweets downloaded so far") % (len(alltweets))
+       
+    #write tweet objects to JSON
+    file = open('tweet.KAlLEAVESM', 'w') 
+    print ("Writing tweet objects to JSON please wait...")
+    for status in alltweets:
+        json.dump(status._json,file,sort_keys = True,indent = 4)
+    
+    #close the file
+    print ("Done")
+    file.close()
+
+if __name__ == '__main__':
+    #pass in the username of the account you want to download
+    get_all_tweets("@laoloveswar")
+
+
+//results
+{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 15:02:41 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+            {
+                "display_url": "twitter.com/i/web/status/1\u2026",
+                "expanded_url": "https://twitter.com/i/web/status/1312045344746766336",
+                "indices": [
+                    117,
+                    140
+                ],
+                "url": "https://t.co/0Z4AjUub20"
+            }
+        ],
+        "user_mentions": []
+    },
+    "favorite_count": 9,
+    "favorited": false,
+    "geo": null,
+    "id": 1312045344746766336,
+    "id_str": "1312045344746766336",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "quoted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 14:13:21 +0000 2020",
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "urls": [
+                {
+                    "display_url": "twitter.com/i/web/status/1\u2026",
+                    "expanded_url": "https://twitter.com/i/web/status/1312032930139525120",
+                    "indices": [
+                        117,
+                        140
+                    ],
+                    "url": "https://t.co/Le2FCAV06j"
+                }
+            ],
+            "user_mentions": []
+        },
+        "favorite_count": 566,
+        "favorited": false,
+        "geo": null,
+        "id": 1312032930139525120,
+        "id_str": "1312032930139525120",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 957,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "text": "\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e41\u0e25\u0e49\u0e27\u0e27\u0e48\u0e32\u0e17\u0e35\u0e48\u0e1a\u0e49\u0e32\u0e19\u0e27\u0e19\u0e23\u0e40\u0e2b\u0e48\u0e2d\u0e1c\u0e25\u0e07\u0e32\u0e19\u0e25\u0e39\u0e01\u0e17\u0e38\u0e01\u0e0a\u0e34\u0e49\u0e19\u0e41\u0e25\u0e30\u0e23\u0e39\u0e1b\u0e27\u0e19\u0e23\u0e40\u0e15\u0e47\u0e21\u0e1a\u0e49\u0e32\u0e19\u0e40\u0e25\u0e22\u0e17\u0e31\u0e49\u0e07\u0e43\u0e2a\u0e48\u0e01\u0e23\u0e2d\u0e1a\u0e43\u0e2b\u0e0d\u0e48\u0e41\u0e25\u0e30\u0e01\u0e23\u0e2d\u0e1a\u0e40\u0e25\u0e47\u0e01 \u0e08\u0e19\u0e19\u0e49\u0e2d\u0e07\u0e2a\u0e32\u0e27\u0e42\u0e1e\u0e2a\u0e23\u0e39\u0e1b\u0e21\u0e38\u0e21\u0e19\u0e36\u0e07\u0e02\u0e2d\u0e07\u0e1a\u0e49\u0e32\u2026 https://t.co/Le2FCAV06j",
+        "truncated": true,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Thu Jun 15 10:29:27 +0000 2017",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "\u0e04\u0e34\u0e14\u0e16\u0e36\u0e07\u0e40\u0e21\u0e19\u0e43\u0e19\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e02\u0e2d\u0e07\u0e40\u0e23\u0e32 \ud83d\udc3b\ud83d\udc12\ud83d\udcab\ud83d\udcab\ud83c\udf7b\ud83c\udf1c \nsupport @warwanarat\ud83c\udfa8@yinyin_anw\ud83d\udd27\ud83d\udc1f #\u0e2b\u0e22\u0e34\u0e48\u0e19\u0e27\u0e2d\u0e23\u0e4c",
+            "entities": {
+                "description": {
+                    "urls": []
+                }
+            },
+            "favourites_count": 45754,
+            "follow_request_sent": false,
+            "followers_count": 3814,
+            "following": false,
+            "friends_count": 83,
+            "geo_enabled": false,
+            "has_extended_profile": false,
+            "id": 875299206096748544,
+            "id_str": "875299206096748544",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 5,
+            "location": "",
+            "name": "20.35",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/875299206096748544/1598617017",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1311734788554776576/XTdmKaEs_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311734788554776576/XTdmKaEs_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "dara_4444",
+            "statuses_count": 34995,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": null,
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "quoted_status_id": 1312032930139525120,
+    "quoted_status_id_str": "1312032930139525120",
+    "retweet_count": 8,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "Is this war's parents wedding dress shop? It's so adorable and lovely of them to have a corner to hang all those fa\u2026 https://t.co/0Z4AjUub20",
+    "truncated": true,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 14:47:48 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 880338058444390400,
+                "id_str": "880338058444390400",
+                "indices": [
+                    0,
+                    11
+                ],
+                "name": "Mona\u2077\ud83c\udf19",
+                "screen_name": "luvformoon"
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1312041598268641280,
+    "id_str": "1312041598268641280",
+    "in_reply_to_screen_name": "luvformoon",
+    "in_reply_to_status_id": 1312041495151566848,
+    "in_reply_to_status_id_str": "1312041495151566848",
+    "in_reply_to_user_id": 880338058444390400,
+    "in_reply_to_user_id_str": "880338058444390400",
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@luvformoon Okay \ud83e\udd23\ud83e\udd23",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 14:45:41 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 880338058444390400,
+                "id_str": "880338058444390400",
+                "indices": [
+                    0,
+                    11
+                ],
+                "name": "Mona\u2077\ud83c\udf19",
+                "screen_name": "luvformoon"
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1312041064791003138,
+    "id_str": "1312041064791003138",
+    "in_reply_to_screen_name": "luvformoon",
+    "in_reply_to_status_id": 1312040124826349568,
+    "in_reply_to_status_id_str": "1312040124826349568",
+    "in_reply_to_user_id": 880338058444390400,
+    "in_reply_to_user_id_str": "880338058444390400",
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@luvformoon Ikr as a 2nd gen kpop stan, i miss the old days when idol can freely interaction and views isn't that important like nowadays \ud83d\ude05",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 14:40:37 +0000 2020",
+    "entities": {
+        "hashtags": [
+            {
+                "indices": [
+                    35,
+                    46
+                ],
+                "text": "warwanarat"
+            }
+        ],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/sKI3H6B7eF",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                "id": 1311858432220127232,
+                "id_str": "1311858432220127232",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311858466210734081,
+                "source_status_id_str": "1311858466210734081",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/sKI3H6B7eF"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1252550750065922051,
+                "id_str": "1252550750065922051",
+                "indices": [
+                    3,
+                    13
+                ],
+                "name": "aWARcado\ud83e\udd51",
+                "screen_name": "_aWARcado"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "display_url": "pic.twitter.com/sKI3H6B7eF",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                "id": 1311858432220127232,
+                "id_str": "1311858432220127232",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311858466210734081,
+                "source_status_id_str": "1311858466210734081",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/sKI3H6B7eF"
+            },
+            {
+                "display_url": "pic.twitter.com/sKI3H6B7eF",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                "id": 1311858443855130624,
+                "id_str": "1311858443855130624",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSoTd2U8AAAcqD.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSoTd2U8AAAcqD.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311858466210734081,
+                "source_status_id_str": "1311858466210734081",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/sKI3H6B7eF"
+            },
+            {
+                "display_url": "pic.twitter.com/sKI3H6B7eF",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                "id": 1311858456224178176,
+                "id_str": "1311858456224178176",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSoUL7VoAAecu2.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSoUL7VoAAecu2.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311858466210734081,
+                "source_status_id_str": "1311858466210734081",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/sKI3H6B7eF"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1312039791886848001,
+    "id_str": "1312039791886848001",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 246,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 02:40:06 +0000 2020",
+        "entities": {
+            "hashtags": [
+                {
+                    "indices": [
+                        20,
+                        31
+                    ],
+                    "text": "warwanarat"
+                }
+            ],
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/sKI3H6B7eF",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                    "id": 1311858432220127232,
+                    "id_str": "1311858432220127232",
+                    "indices": [
+                        32,
+                        55
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/sKI3H6B7eF"
+                }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": []
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/sKI3H6B7eF",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                    "id": 1311858432220127232,
+                    "id_str": "1311858432220127232",
+                    "indices": [
+                        32,
+                        55
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSoSygU4AAjKOZ.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/sKI3H6B7eF"
+                },
+                {
+                    "display_url": "pic.twitter.com/sKI3H6B7eF",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                    "id": 1311858443855130624,
+                    "id_str": "1311858443855130624",
+                    "indices": [
+                        32,
+                        55
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSoTd2U8AAAcqD.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSoTd2U8AAAcqD.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/sKI3H6B7eF"
+                },
+                {
+                    "display_url": "pic.twitter.com/sKI3H6B7eF",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311858466210734081/photo/1",
+                    "id": 1311858456224178176,
+                    "id_str": "1311858456224178176",
+                    "indices": [
+                        32,
+                        55
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSoUL7VoAAecu2.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSoUL7VoAAecu2.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/sKI3H6B7eF"
+                }
+            ]
+        },
+        "favorite_count": 221,
+        "favorited": false,
+        "geo": null,
+        "id": 1311858466210734081,
+        "id_str": "1311858466210734081",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 246,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "text": "\u0e2b\u0e19\u0e49\u0e32\u0e14\u0e37\u0e49\u0e2d\u0e41\u0e19\u0e49\u0e27\u0e27\u0e27\u0e19\u0e30 \ud83d\ude39\n\n#warwanarat https://t.co/sKI3H6B7eF",
+        "truncated": false,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Tue Apr 21 10:52:43 +0000 2020",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "\u0e40\u0e23\u0e32\u0e21\u0e31\u0e19\u0e40\u0e14\u0e47\u0e01\u0e2a\u0e31\u0e07\u0e04\u0e21\u0e21\u0e28\u0e27.\u0e17\u0e35\u0e48\u0e04\u0e25\u0e31\u0e48\u0e07\u0e23\u0e31\u0e01\u0e40\u0e14\u0e47\u0e01\u0e21\u0e02.|\u2022\u0300__\u2022\u0301|||\n\u0e25\u0e07\u0e23\u0e39\u0e1b\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e22\u0e46\u0e19\u0e30\u0e04\u0e30\n\u0e40\u0e2d\u0e32\u0e23\u0e39\u0e1b\u0e40\u0e23\u0e32\u0e44\u0e1b\u0e1b\u0e31\u0e48\u0e19\u0e41\u0e17\u0e47\u0e01\u0e44\u0e14\u0e49\u0e19\u0e30 \u0e02\u0e2d\u0e41\u0e04\u0e48\u0e2d\u0e22\u0e48\u0e32\u0e15\u0e31\u0e14\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15",
+            "entities": {
+                "description": {
+                    "urls": []
+                }
+            },
+            "favourites_count": 1775,
+            "follow_request_sent": false,
+            "followers_count": 190,
+            "following": false,
+            "friends_count": 88,
+            "geo_enabled": false,
+            "has_extended_profile": true,
+            "id": 1252550750065922051,
+            "id_str": "1252550750065922051",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 2,
+            "location": "",
+            "name": "aWARcado\ud83e\udd51",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1252550750065922051/1600850365",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1262236331834372097/Es-TlBK9_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1262236331834372097/Es-TlBK9_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "_aWARcado",
+            "statuses_count": 5055,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": null,
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "RT @_aWARcado: \u0e2b\u0e19\u0e49\u0e32\u0e14\u0e37\u0e49\u0e2d\u0e41\u0e19\u0e49\u0e27\u0e27\u0e27\u0e19\u0e30 \ud83d\ude39\n\n#warwanarat https://t.co/sKI3H6B7eF",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 14:38:17 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+            {
+                "display_url": "twitter.com/i/web/status/1\u2026",
+                "expanded_url": "https://twitter.com/i/web/status/1312039202805157888",
+                "indices": [
+                    117,
+                    140
+                ],
+                "url": "https://t.co/jstn7MQoyO"
+            }
+        ],
+        "user_mentions": []
+    },
+    "favorite_count": 5,
+    "favorited": false,
+    "geo": null,
+    "id": 1312039202805157888,
+    "id_str": "1312039202805157888",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "quoted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 13:08:31 +0000 2020",
+        "entities": {
+            "hashtags": [],
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/iNJLfL1aao",
+                    "expanded_url": "https://twitter.com/adulkittipohn/status/1312016613814628352/photo/1",
+                    "id": 1312016585029107714,
+                    "id_str": "1312016585029107714",
+                    "indices": [
+                        96,
+                        119
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjU4IfoUwAIHD36.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjU4IfoUwAIHD36.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 702,
+                            "resize": "fit",
+                            "w": 1122
+                        },
+                        "medium": {
+                            "h": 702,
+                            "resize": "fit",
+                            "w": 1122
+                        },
+                        "small": {
+                            "h": 425,
+                            "resize": "fit",
+                            "w": 680
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/iNJLfL1aao"
+                }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": []
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/iNJLfL1aao",
+                    "expanded_url": "https://twitter.com/adulkittipohn/status/1312016613814628352/photo/1",
+                    "id": 1312016585029107714,
+                    "id_str": "1312016585029107714",
+                    "indices": [
+                        96,
+                        119
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjU4IfoUwAIHD36.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjU4IfoUwAIHD36.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 702,
+                            "resize": "fit",
+                            "w": 1122
+                        },
+                        "medium": {
+                            "h": 702,
+                            "resize": "fit",
+                            "w": 1122
+                        },
+                        "small": {
+                            "h": 425,
+                            "resize": "fit",
+                            "w": 680
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/iNJLfL1aao"
+                }
+            ]
+        },
+        "favorite_count": 42,
+        "favorited": false,
+        "geo": null,
+        "id": 1312016613814628352,
+        "id_str": "1312016613814628352",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "en",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 20,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "text": "okay here we go.\n\nmy opinions on today's thailand's fandom that might turn me into this eugene: https://t.co/iNJLfL1aao",
+        "truncated": false,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Wed Mar 27 11:35:58 +0000 2019",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "off jumpol biggest enthusiast, physically and mentally. and a huge bl trash. she/her.",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "curiouscat.me/jumpol",
+                            "expanded_url": "https://curiouscat.me/jumpol",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/8qrOUdStdO"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 9677,
+            "follow_request_sent": false,
+            "followers_count": 1080,
+            "following": false,
+            "friends_count": 296,
+            "geo_enabled": false,
+            "has_extended_profile": true,
+            "id": 1110868055708491776,
+            "id_str": "1110868055708491776",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 8,
+            "location": "jumpol's closet",
+            "name": "c i n d y ! \u00a1! \u00a1",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1110868055708491776/1598008673",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1296768480503410688/1RizGWgY_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1296768480503410688/1RizGWgY_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "adulkittipohn",
+            "statuses_count": 27566,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/8qrOUdStdO",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "quoted_status_id": 1312016613814628352,
+    "quoted_status_id_str": "1312016613814628352",
+    "retweet_count": 2,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun\u2026 https://t.co/jstn7MQoyO",
+    "truncated": true,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 14:11:08 +0000 2020",
+    "entities": {
+        "hashtags": [
+            {
+                "indices": [
+                    53,
+                    64
+                ],
+                "text": "warwanarat"
+            }
+        ],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/uD7TBqH4pB",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                "id": 1311854863437844480,
+                "id_str": "1311854863437844480",
+                "indices": [
+                    65,
+                    88
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311854895171948549,
+                "source_status_id_str": "1311854895171948549",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/uD7TBqH4pB"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1252550750065922051,
+                "id_str": "1252550750065922051",
+                "indices": [
+                    3,
+                    13
+                ],
+                "name": "aWARcado\ud83e\udd51",
+                "screen_name": "_aWARcado"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "display_url": "pic.twitter.com/uD7TBqH4pB",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                "id": 1311854863437844480,
+                "id_str": "1311854863437844480",
+                "indices": [
+                    65,
+                    88
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311854895171948549,
+                "source_status_id_str": "1311854895171948549",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/uD7TBqH4pB"
+            },
+            {
+                "display_url": "pic.twitter.com/uD7TBqH4pB",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                "id": 1311854873751633920,
+                "id_str": "1311854873751633920",
+                "indices": [
+                    65,
+                    88
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSlDqLUwAASBfW.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSlDqLUwAASBfW.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311854895171948549,
+                "source_status_id_str": "1311854895171948549",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/uD7TBqH4pB"
+            },
+            {
+                "display_url": "pic.twitter.com/uD7TBqH4pB",
+                "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                "id": 1311854884342251522,
+                "id_str": "1311854884342251522",
+                "indices": [
+                    65,
+                    88
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjSlERoUwAIF7SO.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjSlERoUwAIF7SO.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1536
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 900
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 510
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311854895171948549,
+                "source_status_id_str": "1311854895171948549",
+                "source_user_id": 1252550750065922051,
+                "source_user_id_str": "1252550750065922051",
+                "type": "photo",
+                "url": "https://t.co/uD7TBqH4pB"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1312032369944207365,
+    "id_str": "1312032369944207365",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 164,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 02:25:54 +0000 2020",
+        "entities": {
+            "hashtags": [
+                {
+                    "indices": [
+                        38,
+                        49
+                    ],
+                    "text": "warwanarat"
+                }
+            ],
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/uD7TBqH4pB",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                    "id": 1311854863437844480,
+                    "id_str": "1311854863437844480",
+                    "indices": [
+                        50,
+                        73
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/uD7TBqH4pB"
+                }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": []
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/uD7TBqH4pB",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                    "id": 1311854863437844480,
+                    "id_str": "1311854863437844480",
+                    "indices": [
+                        50,
+                        73
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSlDDwU0AAtUvQ.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/uD7TBqH4pB"
+                },
+                {
+                    "display_url": "pic.twitter.com/uD7TBqH4pB",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                    "id": 1311854873751633920,
+                    "id_str": "1311854873751633920",
+                    "indices": [
+                        50,
+                        73
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSlDqLUwAASBfW.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSlDqLUwAASBfW.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/uD7TBqH4pB"
+                },
+                {
+                    "display_url": "pic.twitter.com/uD7TBqH4pB",
+                    "expanded_url": "https://twitter.com/_aWARcado/status/1311854895171948549/photo/1",
+                    "id": 1311854884342251522,
+                    "id_str": "1311854884342251522",
+                    "indices": [
+                        50,
+                        73
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjSlERoUwAIF7SO.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjSlERoUwAIF7SO.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1536
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 900
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 510
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/uD7TBqH4pB"
+                }
+            ]
+        },
+        "favorite_count": 116,
+        "favorited": false,
+        "geo": null,
+        "id": 1311854895171948549,
+        "id_str": "1311854895171948549",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 164,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "text": "\u0e2a\u0e40\u0e15\u0e1b\u0e04\u0e27\u0e32\u0e21\u0e40\u0e02\u0e34\u0e19\u0e02\u0e2d\u0e07\u0e1e\u0e35\u0e48\u0e15\u0e2d\u0e19\u0e42\u0e14\u0e19\u0e2b\u0e21\u0e39\u0e22\u0e2d\u0e40\u0e15\u0e4a\u0e32\u0e30 \ud83d\ude1d\n\n#warwanarat https://t.co/uD7TBqH4pB",
+        "truncated": false,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Tue Apr 21 10:52:43 +0000 2020",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "\u0e40\u0e23\u0e32\u0e21\u0e31\u0e19\u0e40\u0e14\u0e47\u0e01\u0e2a\u0e31\u0e07\u0e04\u0e21\u0e21\u0e28\u0e27.\u0e17\u0e35\u0e48\u0e04\u0e25\u0e31\u0e48\u0e07\u0e23\u0e31\u0e01\u0e40\u0e14\u0e47\u0e01\u0e21\u0e02.|\u2022\u0300__\u2022\u0301|||\n\u0e25\u0e07\u0e23\u0e39\u0e1b\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e22\u0e46\u0e19\u0e30\u0e04\u0e30\n\u0e40\u0e2d\u0e32\u0e23\u0e39\u0e1b\u0e40\u0e23\u0e32\u0e44\u0e1b\u0e1b\u0e31\u0e48\u0e19\u0e41\u0e17\u0e47\u0e01\u0e44\u0e14\u0e49\u0e19\u0e30 \u0e02\u0e2d\u0e41\u0e04\u0e48\u0e2d\u0e22\u0e48\u0e32\u0e15\u0e31\u0e14\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15",
+            "entities": {
+                "description": {
+                    "urls": []
+                }
+            },
+            "favourites_count": 1775,
+            "follow_request_sent": false,
+            "followers_count": 190,
+            "following": false,
+            "friends_count": 88,
+            "geo_enabled": false,
+            "has_extended_profile": true,
+            "id": 1252550750065922051,
+            "id_str": "1252550750065922051",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 2,
+            "location": "",
+            "name": "aWARcado\ud83e\udd51",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1252550750065922051/1600850365",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1262236331834372097/Es-TlBK9_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1262236331834372097/Es-TlBK9_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "_aWARcado",
+            "statuses_count": 5055,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": null,
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "RT @_aWARcado: \u0e2a\u0e40\u0e15\u0e1b\u0e04\u0e27\u0e32\u0e21\u0e40\u0e02\u0e34\u0e19\u0e02\u0e2d\u0e07\u0e1e\u0e35\u0e48\u0e15\u0e2d\u0e19\u0e42\u0e14\u0e19\u0e2b\u0e21\u0e39\u0e22\u0e2d\u0e40\u0e15\u0e4a\u0e32\u0e30 \ud83d\ude1d\n\n#warwanarat https://t.co/uD7TBqH4pB",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 13:02:24 +0000 2020",
+    "entities": {
+        "hashtags": [
+            {
+                "indices": [
+                    21,
+                    47
+                ],
+                "text": "BlossomingLifeWithMamonde"
+            },
+            {
+                "indices": [
+                    48,
+                    63
+                ],
+                "text": "MAMONDExYINWAR"
+            },
+            {
+                "indices": [
+                    64,
+                    80
+                ],
+                "text": "MamondeThailand"
+            }
+        ],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/PxYmQulDHb",
+                "expanded_url": "https://twitter.com/MamondeThailand/status/1312012295900327940/video/1",
+                "id": 1312012261641187330,
+                "id_str": "1312012261641187330",
+                "indices": [
+                    81,
+                    104
+                ],
+                "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 1280,
+                        "resize": "fit",
+                        "w": 720
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 675
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 383
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1312012295900327940,
+                "source_status_id_str": "1312012295900327940",
+                "source_user_id": 863032422337609728,
+                "source_user_id_str": "863032422337609728",
+                "type": "photo",
+                "url": "https://t.co/PxYmQulDHb"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 863032422337609728,
+                "id_str": "863032422337609728",
+                "indices": [
+                    3,
+                    19
+                ],
+                "name": "Mamonde_Thailand",
+                "screen_name": "MamondeThailand"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "additional_media_info": {
+                    "monetizable": false,
+                    "source_user": {
+                        "contributors_enabled": false,
+                        "created_at": "Fri May 12 14:05:38 +0000 2017",
+                        "default_profile": false,
+                        "default_profile_image": false,
+                        "description": "Mamonde is a South Korean beauty care, inspired by flowers that brings you the hidden power and energizing nutrients of flowers.",
+                        "entities": {
+                            "description": {
+                                "urls": []
+                            },
+                            "url": {
+                                "urls": [
+                                    {
+                                        "display_url": "facebook.com/mamondethailand",
+                                        "expanded_url": "http://facebook.com/mamondethailand",
+                                        "indices": [
+                                            0,
+                                            23
+                                        ],
+                                        "url": "https://t.co/00gPAdjMEn"
+                                    }
+                                ]
+                            }
+                        },
+                        "favourites_count": 1025,
+                        "follow_request_sent": false,
+                        "followers_count": 2259,
+                        "following": false,
+                        "friends_count": 0,
+                        "geo_enabled": false,
+                        "has_extended_profile": false,
+                        "id": 863032422337609728,
+                        "id_str": "863032422337609728",
+                        "is_translation_enabled": false,
+                        "is_translator": false,
+                        "lang": null,
+                        "listed_count": 4,
+                        "location": "Thailand",
+                        "name": "Mamonde_Thailand",
+                        "notifications": false,
+                        "profile_background_color": "000000",
+                        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+                        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+                        "profile_background_tile": false,
+                        "profile_banner_url": "https://pbs.twimg.com/profile_banners/863032422337609728/1599023875",
+                        "profile_image_url": "http://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+                        "profile_image_url_https": "https://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+                        "profile_link_color": "19CF86",
+                        "profile_sidebar_border_color": "000000",
+                        "profile_sidebar_fill_color": "000000",
+                        "profile_text_color": "000000",
+                        "profile_use_background_image": false,
+                        "protected": false,
+                        "screen_name": "MamondeThailand",
+                        "statuses_count": 583,
+                        "time_zone": null,
+                        "translator_type": "none",
+                        "url": "https://t.co/00gPAdjMEn",
+                        "utc_offset": null,
+                        "verified": false
+                    }
+                },
+                "display_url": "pic.twitter.com/PxYmQulDHb",
+                "expanded_url": "https://twitter.com/MamondeThailand/status/1312012295900327940/video/1",
+                "id": 1312012261641187330,
+                "id_str": "1312012261641187330",
+                "indices": [
+                    81,
+                    104
+                ],
+                "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 1280,
+                        "resize": "fit",
+                        "w": 720
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 675
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 383
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1312012295900327940,
+                "source_status_id_str": "1312012295900327940",
+                "source_user_id": 863032422337609728,
+                "source_user_id_str": "863032422337609728",
+                "type": "video",
+                "url": "https://t.co/PxYmQulDHb",
+                "video_info": {
+                    "aspect_ratio": [
+                        9,
+                        16
+                    ],
+                    "duration_millis": 21515,
+                    "variants": [
+                        {
+                            "content_type": "application/x-mpegURL",
+                            "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/pl/WvO331_vDeV3W2fO.m3u8?tag=10"
+                        },
+                        {
+                            "bitrate": 632000,
+                            "content_type": "video/mp4",
+                            "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/320x568/5kjpbHSvCp-9KKTW.mp4?tag=10"
+                        },
+                        {
+                            "bitrate": 832000,
+                            "content_type": "video/mp4",
+                            "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/360x640/jRj8fpPlT8l5J7Sd.mp4?tag=10"
+                        },
+                        {
+                            "bitrate": 2176000,
+                            "content_type": "video/mp4",
+                            "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/720x1280/mky1HlZfAwgUpEaX.mp4?tag=10"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1312015072907190277,
+    "id_str": "1312015072907190277",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "und",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 675,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 12:51:22 +0000 2020",
+        "entities": {
+            "hashtags": [
+                {
+                    "indices": [
+                        0,
+                        26
+                    ],
+                    "text": "BlossomingLifeWithMamonde"
+                },
+                {
+                    "indices": [
+                        27,
+                        42
+                    ],
+                    "text": "MAMONDExYINWAR"
+                },
+                {
+                    "indices": [
+                        43,
+                        59
+                    ],
+                    "text": "MamondeThailand"
+                }
+            ],
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/PxYmQulDHb",
+                    "expanded_url": "https://twitter.com/MamondeThailand/status/1312012295900327940/video/1",
+                    "id": 1312012261641187330,
+                    "id_str": "1312012261641187330",
+                    "indices": [
+                        60,
+                        83
+                    ],
+                    "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                    "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 1280,
+                            "resize": "fit",
+                            "w": 720
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 675
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 383
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/PxYmQulDHb"
+                }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": []
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "additional_media_info": {
+                        "monetizable": false
+                    },
+                    "display_url": "pic.twitter.com/PxYmQulDHb",
+                    "expanded_url": "https://twitter.com/MamondeThailand/status/1312012295900327940/video/1",
+                    "id": 1312012261641187330,
+                    "id_str": "1312012261641187330",
+                    "indices": [
+                        60,
+                        83
+                    ],
+                    "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                    "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1312012261641187330/pu/img/3ltfczPHVsFNR6k_.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 1280,
+                            "resize": "fit",
+                            "w": 720
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 675
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 383
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "video",
+                    "url": "https://t.co/PxYmQulDHb",
+                    "video_info": {
+                        "aspect_ratio": [
+                            9,
+                            16
+                        ],
+                        "duration_millis": 21515,
+                        "variants": [
+                            {
+                                "content_type": "application/x-mpegURL",
+                                "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/pl/WvO331_vDeV3W2fO.m3u8?tag=10"
+                            },
+                            {
+                                "bitrate": 632000,
+                                "content_type": "video/mp4",
+                                "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/320x568/5kjpbHSvCp-9KKTW.mp4?tag=10"
+                            },
+                            {
+                                "bitrate": 832000,
+                                "content_type": "video/mp4",
+                                "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/360x640/jRj8fpPlT8l5J7Sd.mp4?tag=10"
+                            },
+                            {
+                                "bitrate": 2176000,
+                                "content_type": "video/mp4",
+                                "url": "https://video.twimg.com/ext_tw_video/1312012261641187330/pu/vid/720x1280/mky1HlZfAwgUpEaX.mp4?tag=10"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "favorite_count": 534,
+        "favorited": false,
+        "geo": null,
+        "id": 1312012295900327940,
+        "id_str": "1312012295900327940",
+        "in_reply_to_screen_name": "MamondeThailand",
+        "in_reply_to_status_id": 1312012257455337472,
+        "in_reply_to_status_id_str": "1312012257455337472",
+        "in_reply_to_user_id": 863032422337609728,
+        "in_reply_to_user_id_str": "863032422337609728",
+        "is_quote_status": false,
+        "lang": "und",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 675,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "text": "#BlossomingLifeWithMamonde\n#MAMONDExYINWAR\n#MamondeThailand https://t.co/PxYmQulDHb",
+        "truncated": false,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Fri May 12 14:05:38 +0000 2017",
+            "default_profile": false,
+            "default_profile_image": false,
+            "description": "Mamonde is a South Korean beauty care, inspired by flowers that brings you the hidden power and energizing nutrients of flowers.",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "facebook.com/mamondethailand",
+                            "expanded_url": "http://facebook.com/mamondethailand",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/00gPAdjMEn"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 1025,
+            "follow_request_sent": false,
+            "followers_count": 2259,
+            "following": false,
+            "friends_count": 0,
+            "geo_enabled": false,
+            "has_extended_profile": false,
+            "id": 863032422337609728,
+            "id_str": "863032422337609728",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 4,
+            "location": "Thailand",
+            "name": "Mamonde_Thailand",
+            "notifications": false,
+            "profile_background_color": "000000",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/863032422337609728/1599023875",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+            "profile_link_color": "19CF86",
+            "profile_sidebar_border_color": "000000",
+            "profile_sidebar_fill_color": "000000",
+            "profile_text_color": "000000",
+            "profile_use_background_image": false,
+            "protected": false,
+            "screen_name": "MamondeThailand",
+            "statuses_count": 583,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/00gPAdjMEn",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "text": "RT @MamondeThailand: #BlossomingLifeWithMamonde\n#MAMONDExYINWAR\n#MamondeThailand https://t.co/PxYmQulDHb",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 12:54:33 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 863032422337609728,
+                "id_str": "863032422337609728",
+                "indices": [
+                    3,
+                    19
+                ],
+                "name": "Mamonde_Thailand",
+                "screen_name": "MamondeThailand"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1312013098606309376,
+    "id_str": "1312013098606309376",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "retweet_count": 1609,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 12:51:12 +0000 2020",
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "urls": [
+                {
+                    "display_url": "twitter.com/i/web/status/1\u2026",
+                    "expanded_url": "https://twitter.com/i/web/status/1312012257455337472",
+                    "indices": [
+                        117,
+                        140
+                    ],
+                    "url": "https://t.co/LPwpskwqMg"
+                }
+            ],
+            "user_mentions": []
+        },
+        "favorite_count": 1304,
+        "favorited": false,
+        "geo": null,
+        "id": 1312012257455337472,
+        "id_str": "1312012257455337472",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 1609,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "text": "\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e02\u0e2d\u0e07\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e01\u0e32\u0e23\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e44\u0e1e\u0e23\u0e2a\u0e4c\u0e27\u0e31\u0e19\u0e40\u0e01\u0e34\u0e14\u0e2b\u0e22\u0e34\u0e48\u0e19 \u0e04\u0e37\u0e2d\u0e04\u0e34\u0e27\u0e17\u0e35\u0e48\u0e08\u0e30\u0e21\u0e35\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e44\u0e1e\u0e23\u0e2a\u0e4c \u0e27\u0e2d\u0e23\u0e4c\u0e41\u0e25\u0e30\u0e17\u0e35\u0e21\u0e07\u0e32\u0e19 \u0e0b\u0e49\u0e2d\u0e21\u0e01\u0e31\u0e1a\u0e2b\u0e22\u0e34\u0e48\u0e19\u0e44\u0e27\u0e49\u0e27\u0e48\u0e32\u0e08\u0e30\u0e23\u0e49\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07\u2026 https://t.co/LPwpskwqMg",
+        "truncated": true,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Fri May 12 14:05:38 +0000 2017",
+            "default_profile": false,
+            "default_profile_image": false,
+            "description": "Mamonde is a South Korean beauty care, inspired by flowers that brings you the hidden power and energizing nutrients of flowers.",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "facebook.com/mamondethailand",
+                            "expanded_url": "http://facebook.com/mamondethailand",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/00gPAdjMEn"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 1025,
+            "follow_request_sent": false,
+            "followers_count": 2259,
+            "following": false,
+            "friends_count": 0,
+            "geo_enabled": false,
+            "has_extended_profile": false,
+            "id": 863032422337609728,
+            "id_str": "863032422337609728",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 4,
+            "location": "Thailand",
+            "name": "Mamonde_Thailand",
+            "notifications": false,
+            "profile_background_color": "000000",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/863032422337609728/1599023875",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/944038254277312512/EaxmCRG9_normal.jpg",
+            "profile_link_color": "19CF86",
+            "profile_sidebar_border_color": "000000",
+            "profile_sidebar_fill_color": "000000",
+            "profile_text_color": "000000",
+            "profile_use_background_image": false,
+            "protected": false,
+            "screen_name": "MamondeThailand",
+            "statuses_count": 583,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/00gPAdjMEn",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "text": "RT @MamondeThailand: \u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e02\u0e2d\u0e07\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e01\u0e32\u0e23\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e44\u0e1e\u0e23\u0e2a\u0e4c\u0e27\u0e31\u0e19\u0e40\u0e01\u0e34\u0e14\u0e2b\u0e22\u0e34\u0e48\u0e19 \u0e04\u0e37\u0e2d\u0e04\u0e34\u0e27\u0e17\u0e35\u0e48\u0e08\u0e30\u0e21\u0e35\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e44\u0e1e\u0e23\u0e2a\u0e4c \u0e27\u0e2d\u0e23\u0e4c\u0e41\u0e25\u0e30\u0e17\u0e35\u0e21\u0e07\u0e32\u0e19 \u0e0b\u0e49\u0e2d\u0e21\u0e01\u0e31\u0e1a\u0e2b\u0e22\u0e34\u0e48\u0e19\u0e44\u0e27\u0e49\u0e27\u0e48\u0e32\u0e08\u0e30\u0e23\u0e49\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e35\u0e49\u2026",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 10:55:06 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+            {
+                "display_url": "twitter.com/i/web/status/1\u2026",
+                "expanded_url": "https://twitter.com/i/web/status/1311983040583921665",
+                "indices": [
+                    113,
+                    136
+                ],
+                "url": "https://t.co/UeqyPqFva4"
+            }
+        ],
+        "user_mentions": []
+    },
+    "favorite_count": 7,
+    "favorited": false,
+    "geo": null,
+    "id": 1311983040583921665,
+    "id_str": "1311983040583921665",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 2,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "text": "Still can't believe this is war's first short film. It's cute and hot at the same time \ud83e\udd23\ud83e\udd23Btw it has engsub here\u2026 https://t.co/UeqyPqFva4",
+    "truncated": true,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 09:34:05 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1228357240748298241,
+                "id_str": "1228357240748298241",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "kyle jongcheveevat \u2764\ufe0f",
+                "screen_name": "sprinklesss1"
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1311962649392017411,
+    "id_str": "1311962649392017411",
+    "in_reply_to_screen_name": "sprinklesss1",
+    "in_reply_to_status_id": 1311959092793995265,
+    "in_reply_to_status_id_str": "1311959092793995265",
+    "in_reply_to_user_id": 1228357240748298241,
+    "in_reply_to_user_id_str": "1228357240748298241",
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@sprinklesss1 Ikr \ud83d\ude06 war has a babie charm that makes everyone want to pamper him \ud83e\udd23",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 09:12:14 +0000 2020",
+    "entities": {
+        "hashtags": [
+            {
+                "indices": [
+                    80,
+                    91
+                ],
+                "text": "warwanarat"
+            }
+        ],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/GHudGlL86U",
+                "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                "id": 1311956635019960320,
+                "id_str": "1311956635019960320",
+                "indices": [
+                    92,
+                    115
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1366
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 800
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 454
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311956643450626049,
+                "source_status_id_str": "1311956643450626049",
+                "source_user_id": 1252185104425734144,
+                "source_user_id_str": "1252185104425734144",
+                "type": "photo",
+                "url": "https://t.co/GHudGlL86U"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1252185104425734144,
+                "id_str": "1252185104425734144",
+                "indices": [
+                    3,
+                    19
+                ],
+                "name": "\u1d05\u1d0f\u028f\u1d0f\u1d1c\u1d07\u1d20\u1d07\u0280\u1d1b\u029c\u026a\u0274\u1d0b\u1d00\u0299\u1d0f\u1d1c\u1d1b\u1d0d\u1d07",
+                "screen_name": "doyoueverthink5"
+            },
+            {
+                "id": 80762944,
+                "id_str": "80762944",
+                "indices": [
+                    66,
+                    77
+                ],
+                "name": "WAR",
+                "screen_name": "warwanarat"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "display_url": "pic.twitter.com/GHudGlL86U",
+                "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                "id": 1311956635019960320,
+                "id_str": "1311956635019960320",
+                "indices": [
+                    92,
+                    115
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1366
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 800
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 454
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311956643450626049,
+                "source_status_id_str": "1311956643450626049",
+                "source_user_id": 1252185104425734144,
+                "source_user_id_str": "1252185104425734144",
+                "type": "photo",
+                "url": "https://t.co/GHudGlL86U"
+            },
+            {
+                "display_url": "pic.twitter.com/GHudGlL86U",
+                "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                "id": 1311956635057680385,
+                "id_str": "1311956635057680385",
+                "indices": [
+                    92,
+                    115
+                ],
+                "media_url": "http://pbs.twimg.com/media/EjUBm8lUcAEuVba.jpg",
+                "media_url_https": "https://pbs.twimg.com/media/EjUBm8lUcAEuVba.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 2048,
+                        "resize": "fit",
+                        "w": 1366
+                    },
+                    "medium": {
+                        "h": 1200,
+                        "resize": "fit",
+                        "w": 800
+                    },
+                    "small": {
+                        "h": 680,
+                        "resize": "fit",
+                        "w": 454
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "source_status_id": 1311956643450626049,
+                "source_status_id_str": "1311956643450626049",
+                "source_user_id": 1252185104425734144,
+                "source_user_id_str": "1252185104425734144",
+                "type": "photo",
+                "url": "https://t.co/GHudGlL86U"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311957151414353922,
+    "id_str": "1311957151414353922",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 39,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 09:10:13 +0000 2020",
+        "entities": {
+            "hashtags": [
+                {
+                    "indices": [
+                        59,
+                        70
+                    ],
+                    "text": "warwanarat"
+                }
+            ],
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/GHudGlL86U",
+                    "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                    "id": 1311956635019960320,
+                    "id_str": "1311956635019960320",
+                    "indices": [
+                        71,
+                        94
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1366
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 800
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 454
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/GHudGlL86U"
+                }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": [
+                {
+                    "id": 80762944,
+                    "id_str": "80762944",
+                    "indices": [
+                        45,
+                        56
+                    ],
+                    "name": "WAR",
+                    "screen_name": "warwanarat"
+                }
+            ]
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "display_url": "pic.twitter.com/GHudGlL86U",
+                    "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                    "id": 1311956635019960320,
+                    "id_str": "1311956635019960320",
+                    "indices": [
+                        71,
+                        94
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjUBm8cU4AAS0hG.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1366
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 800
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 454
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/GHudGlL86U"
+                },
+                {
+                    "display_url": "pic.twitter.com/GHudGlL86U",
+                    "expanded_url": "https://twitter.com/doyoueverthink5/status/1311956643450626049/photo/1",
+                    "id": 1311956635057680385,
+                    "id_str": "1311956635057680385",
+                    "indices": [
+                        71,
+                        94
+                    ],
+                    "media_url": "http://pbs.twimg.com/media/EjUBm8lUcAEuVba.jpg",
+                    "media_url_https": "https://pbs.twimg.com/media/EjUBm8lUcAEuVba.jpg",
+                    "sizes": {
+                        "large": {
+                            "h": 2048,
+                            "resize": "fit",
+                            "w": 1366
+                        },
+                        "medium": {
+                            "h": 1200,
+                            "resize": "fit",
+                            "w": 800
+                        },
+                        "small": {
+                            "h": 680,
+                            "resize": "fit",
+                            "w": 454
+                        },
+                        "thumb": {
+                            "h": 150,
+                            "resize": "crop",
+                            "w": 150
+                        }
+                    },
+                    "type": "photo",
+                    "url": "https://t.co/GHudGlL86U"
+                }
+            ]
+        },
+        "favorite_count": 32,
+        "favorited": false,
+        "geo": null,
+        "id": 1311956643450626049,
+        "id_str": "1311956643450626049",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 39,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "text": "29092020 War Warnarat\n\n\u0e19\u0e32\u0e22\u0e41\u0e1a\u0e1a\u0e2b\u0e25\u0e48\u0e2d \u0e1a\u0e2d\u0e01\u0e15\u0e48\u0e2d\u0e14\u0e49\u0e27\u0e22 @warwanarat \n\n#warwanarat https://t.co/GHudGlL86U",
+        "truncated": false,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Mon Apr 20 10:39:38 +0000 2020",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "do you ever think about yp/py *always w*\nTo see all photos by \u1d05\u1d0f\u028f\u1d0f\u1d1c\u1d07\u1d20\u1d07\u0280\u1d1b\u029c\u026a\u0274\u1d0b\u1d00\u0299\u1d0f\u1d1c\u1d1b\u1d0d\u1d07 pls click the link below",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "twitter.com/doyoueverthink\u2026",
+                            "expanded_url": "https://twitter.com/doyoueverthink5/moments",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/aIB3fOVd9u"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 91,
+            "follow_request_sent": false,
+            "followers_count": 524,
+            "following": false,
+            "friends_count": 29,
+            "geo_enabled": false,
+            "has_extended_profile": false,
+            "id": 1252185104425734144,
+            "id_str": "1252185104425734144",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 5,
+            "location": "",
+            "name": "\u1d05\u1d0f\u028f\u1d0f\u1d1c\u1d07\u1d20\u1d07\u0280\u1d1b\u029c\u026a\u0274\u1d0b\u1d00\u0299\u1d0f\u1d1c\u1d1b\u1d0d\u1d07",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1252185104425734144/1590237654",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1252185900018098176/xAbTjIan_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1252185900018098176/xAbTjIan_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "doyoueverthink5",
+            "statuses_count": 3527,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/aIB3fOVd9u",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "RT @doyoueverthink5: 29092020 War Warnarat\n\n\u0e19\u0e32\u0e22\u0e41\u0e1a\u0e1a\u0e2b\u0e25\u0e48\u0e2d \u0e1a\u0e2d\u0e01\u0e15\u0e48\u0e2d\u0e14\u0e49\u0e27\u0e22 @warwanarat \n\n#warwanarat https://t.co/GHudGlL86U",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 09:04:43 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 744212796099813376,
+                "id_str": "744212796099813376",
+                "indices": [
+                    3,
+                    15
+                ],
+                "name": "\u201823 lll",
+                "screen_name": "wananichcha"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311955261091966978,
+    "id_str": "1311955261091966978",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "retweet_count": 27,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Fri Oct 02 08:54:14 +0000 2020",
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "urls": [
+                {
+                    "display_url": "twitter.com/i/web/status/1\u2026",
+                    "expanded_url": "https://twitter.com/i/web/status/1311952621314342912",
+                    "indices": [
+                        117,
+                        140
+                    ],
+                    "url": "https://t.co/IjIyNgpbT1"
+                }
+            ],
+            "user_mentions": []
+        },
+        "favorite_count": 24,
+        "favorited": false,
+        "geo": null,
+        "id": 1311952621314342912,
+        "id_str": "1311952621314342912",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": true,
+        "retweet_count": 27,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "text": "\ud83c\udf3f ( OPV ) \u0e2b\u0e32\u0e01\u0e31\u0e19\u0e08\u0e19\u0e40\u0e08\u0e2d\n\n\u2018 \u0e41\u0e15\u0e48\u0e40\u0e23\u0e32\u0e01\u0e47\u0e2b\u0e32\u0e01\u0e31\u0e19\u0e08\u0e19\u0e40\u0e08\u0e2d\n\u0e21\u0e31\u0e19\u0e19\u0e32\u0e19\u0e41\u0e04\u0e48\u0e44\u0e2b\u0e19\u0e17\u0e35\u0e48\u0e04\u0e2d\u0e22\u0e40\u0e18\u0e2d\u0e21\u0e32\n\u0e23\u0e39\u0e49\u0e2a\u0e36\u0e01\u0e44\u0e2b\u0e21\u0e27\u0e48\u0e32\u0e0a\u0e35\u0e27\u0e34\u0e15\u0e04\u0e38\u0e49\u0e21\u0e04\u0e48\u0e32\n\n\u0e40\u0e23\u0e32\u0e15\u0e48\u0e32\u0e07\u0e23\u0e39\u0e49\u0e42\u0e25\u0e01\u0e21\u0e31\u0e19\u0e41\u0e2a\u0e19\u0e01\u0e27\u0e49\u2026 https://t.co/IjIyNgpbT1",
+        "truncated": true,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Sat Jun 18 16:58:52 +0000 2016",
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "\ud83c\udf3f I Support @warwanarat @yinyin_anw I \u0e41\u0e2d\u0e1a\u0e15\u0e34\u0e48\u0e07\u0e08\u0e35\u0e19 \u0e1c\u0e34\u0e07\u0e40\u0e2a\u0e35\u0e22 . \u0e40\u0e15\u0e49\u0e32\u0e21\u0e39\u0e48 I \u0e44\u0e21\u0e48\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e25\u0e34\u0e48\u0e21 I \u0e17\u0e35\u0e48\u0e40\u0e2b\u0e47\u0e19\u0e44\u0e21\u0e48\u0e1b\u0e31\u0e48\u0e19\u0e41\u0e17\u0e47\u0e04\u0e40\u0e1e\u0e23\u0e32\u0e30\u0e21\u0e35\u0e2d\u0e35\u0e01\u0e41\u0e2d\u0e04\u0e40\u0e2d\u0e32\u0e44\u0e27\u0e49\u0e1b\u0e31\u0e48\u0e19\u0e41\u0e22\u0e01\u0e15\u0e48\u0e32\u0e07\u0e2b\u0e32\u0e01\u0e19\u0e30\u0e04\u0e30 \u0e08\u0e30\u0e44\u0e14\u0e49\u0e44\u0e21\u0e48\u0e23\u0e01\u0e44\u0e17\u0e21\u0e4c\u0e44\u0e25\u0e19\u0e4c.",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "vt.tiktok.com/ZS53Xu8U/",
+                            "expanded_url": "https://vt.tiktok.com/ZS53Xu8U/",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/sr5BfWgK5X"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 6156,
+            "follow_request_sent": false,
+            "followers_count": 415,
+            "following": false,
+            "friends_count": 94,
+            "geo_enabled": false,
+            "has_extended_profile": true,
+            "id": 744212796099813376,
+            "id_str": "744212796099813376",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 1,
+            "location": "",
+            "name": "\u201823 lll",
+            "notifications": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/744212796099813376/1598760983",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1311456998408429568/58Be-ulM_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311456998408429568/58Be-ulM_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "protected": false,
+            "screen_name": "wananichcha",
+            "statuses_count": 6744,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/sr5BfWgK5X",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "RT @wananichcha: \ud83c\udf3f ( OPV ) \u0e2b\u0e32\u0e01\u0e31\u0e19\u0e08\u0e19\u0e40\u0e08\u0e2d\n\n\u2018 \u0e41\u0e15\u0e48\u0e40\u0e23\u0e32\u0e01\u0e47\u0e2b\u0e32\u0e01\u0e31\u0e19\u0e08\u0e19\u0e40\u0e08\u0e2d\n\u0e21\u0e31\u0e19\u0e19\u0e32\u0e19\u0e41\u0e04\u0e48\u0e44\u0e2b\u0e19\u0e17\u0e35\u0e48\u0e04\u0e2d\u0e22\u0e40\u0e18\u0e2d\u0e21\u0e32\n\u0e23\u0e39\u0e49\u0e2a\u0e36\u0e01\u0e44\u0e2b\u0e21\u0e27\u0e48\u0e32\u0e0a\u0e35\u0e27\u0e34\u0e15\u0e04\u0e38\u0e49\u0e21\u0e04\u0e48\u0e32\n\n\u0e40\u0e23\u0e32\u0e15\u0e48\u0e32\u0e07\u0e23\u0e39\u0e49\u0e42\u0e25\u0e01\u0e21\u0e31\u0e19\u0e41\u0e2a\u0e19\u0e01\u0e27\u0e49\u0e32\u0e07\u0e43\u0e2b\u0e0d\u0e48\u2026",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 09:01:21 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/YZjlzjaumt",
+                "expanded_url": "https://twitter.com/laoloveswar/status/1311954412173230080/photo/1",
+                "id": 1311954405055442944,
+                "id_str": "1311954405055442944",
+                "indices": [
+                    26,
+                    49
+                ],
+                "media_url": "http://pbs.twimg.com/tweet_video_thumb/EjT_lJLWsAAiybT.jpg",
+                "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EjT_lJLWsAAiybT.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "medium": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "small": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "type": "photo",
+                "url": "https://t.co/YZjlzjaumt"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1311460119423541248,
+                "id_str": "1311460119423541248",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "nellovesguys",
+                "screen_name": "nellovesguys"
+            },
+            {
+                "id": 1267651481882071041,
+                "id_str": "1267651481882071041",
+                "indices": [
+                    14,
+                    25
+                ],
+                "name": "G \ud83c\udf3c",
+                "screen_name": "ggggannnnn"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "display_url": "pic.twitter.com/YZjlzjaumt",
+                "expanded_url": "https://twitter.com/laoloveswar/status/1311954412173230080/photo/1",
+                "id": 1311954405055442944,
+                "id_str": "1311954405055442944",
+                "indices": [
+                    26,
+                    49
+                ],
+                "media_url": "http://pbs.twimg.com/tweet_video_thumb/EjT_lJLWsAAiybT.jpg",
+                "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EjT_lJLWsAAiybT.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "medium": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "small": {
+                        "h": 446,
+                        "resize": "fit",
+                        "w": 480
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "type": "animated_gif",
+                "url": "https://t.co/YZjlzjaumt",
+                "video_info": {
+                    "aspect_ratio": [
+                        240,
+                        223
+                    ],
+                    "variants": [
+                        {
+                            "bitrate": 0,
+                            "content_type": "video/mp4",
+                            "url": "https://video.twimg.com/tweet_video/EjT_lJLWsAAiybT.mp4"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311954412173230080,
+    "id_str": "1311954412173230080",
+    "in_reply_to_screen_name": "nellovesguys",
+    "in_reply_to_status_id": 1311953961167986688,
+    "in_reply_to_status_id_str": "1311953961167986688",
+    "in_reply_to_user_id": 1311460119423541248,
+    "in_reply_to_user_id_str": "1311460119423541248",
+    "is_quote_status": false,
+    "lang": "und",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@nellovesguys @ggggannnnn https://t.co/YZjlzjaumt",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 08:47:03 +0000 2020",
+    "entities": {
+        "hashtags": [
+            {
+                "indices": [
+                    47,
+                    61
+                ],
+                "text": "BoyfriendsGMM"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 388393453,
+                "id_str": "388393453",
+                "indices": [
+                    3,
+                    16
+                ],
+                "name": "\u0e44\u0e2d\u0e49\u0e08\u0e48\u0e2d\u0e22 \ud83d\udc99",
+                "screen_name": "nontiyatanoi"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311950814462775296,
+    "id_str": "1311950814462775296",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "th",
+    "place": null,
+    "retweet_count": 447,
+    "retweeted": false,
+    "retweeted_status": {
+        "contributors": null,
+        "coordinates": null,
+        "created_at": "Thu Oct 01 16:02:14 +0000 2020",
+        "entities": {
+            "hashtags": [
+                {
+                    "indices": [
+                        29,
+                        43
+                    ],
+                    "text": "BoyfriendsGMM"
+                }
+            ],
+            "symbols": [],
+            "urls": [
+                {
+                    "display_url": "twitter.com/i/web/status/1\u2026",
+                    "expanded_url": "https://twitter.com/i/web/status/1311697944521789442",
+                    "indices": [
+                        116,
+                        139
+                    ],
+                    "url": "https://t.co/cVcs8Ow4gH"
+                }
+            ],
+            "user_mentions": []
+        },
+        "favorite_count": 362,
+        "favorited": false,
+        "geo": null,
+        "id": 1311697944521789442,
+        "id_str": "1311697944521789442",
+        "in_reply_to_screen_name": null,
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "is_quote_status": false,
+        "lang": "th",
+        "place": null,
+        "possibly_sensitive": false,
+        "retweet_count": 447,
+        "retweeted": false,
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "text": "\u0e40\u0e01\u0e47\u0e1a\u0e15\u0e01\u0e20\u0e32\u0e1e\u0e1a\u0e23\u0e23\u0e22\u0e32\u0e01\u0e32\u0e28\u0e07\u0e32\u0e19\u0e41\u0e16\u0e25\u0e07\u0e02\u0e48\u0e32\u0e27 #BoyfriendsGMM \u0e1e\u0e35\u0e48\u0e40\u0e02\u0e32\u0e1a\u0e2d\u0e01\u0e27\u0e48\u0e32\u0e43\u0e2b\u0e49\u0e16\u0e48\u0e32\u0e22\u0e21\u0e32\u0e43\u0e2b\u0e49\u0e04\u0e23\u0e1a\u0e17\u0e38\u0e01\u0e04\u0e19\u0e19\u0e30 \u0e41\u0e15\u0e48\u0e27\u0e2d\u0e23\u0e4c\u0e19\u0e48\u0e32\u0e23\u0e31\u0e01\u0e08\u0e19\u0e43\u0e08\u0e40\u0e08\u0e47\u0e1a \u0e2a\u0e23\u0e38\u0e1b\u0e04\u0e37\u0e2d \u0e21\u0e35\u0e41\u0e15\u0e48\u2026 https://t.co/cVcs8Ow4gH",
+        "truncated": true,
+        "user": {
+            "contributors_enabled": false,
+            "created_at": "Mon Oct 10 17:34:17 +0000 2011",
+            "default_profile": false,
+            "default_profile_image": false,
+            "description": "\ud83d\udc49\ud83c\udffb Creative Content \ud83d\udc49\ud83c\udffb online thaich8 \ud83d\udc49\ud83c\udffb IG : jabbtanoi",
+            "entities": {
+                "description": {
+                    "urls": []
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "facebook.com/nontiyatanoi",
+                            "expanded_url": "https://www.facebook.com/nontiyatanoi",
+                            "indices": [
+                                0,
+                                23
+                            ],
+                            "url": "https://t.co/av1P3O2dhl"
+                        }
+                    ]
+                }
+            },
+            "favourites_count": 12146,
+            "follow_request_sent": false,
+            "followers_count": 400,
+            "following": false,
+            "friends_count": 248,
+            "geo_enabled": true,
+            "has_extended_profile": false,
+            "id": 388393453,
+            "id_str": "388393453",
+            "is_translation_enabled": false,
+            "is_translator": false,
+            "lang": null,
+            "listed_count": 0,
+            "location": "",
+            "name": "\u0e44\u0e2d\u0e49\u0e08\u0e48\u0e2d\u0e22 \ud83d\udc99",
+            "notifications": false,
+            "profile_background_color": "1A1B1F",
+            "profile_background_image_url": "http://abs.twimg.com/images/themes/theme9/bg.gif",
+            "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme9/bg.gif",
+            "profile_background_tile": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/388393453/1539891172",
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1266773467816275973/4RyyY21l_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1266773467816275973/4RyyY21l_normal.jpg",
+            "profile_link_color": "F07DE1",
+            "profile_sidebar_border_color": "000000",
+            "profile_sidebar_fill_color": "252429",
+            "profile_text_color": "666666",
+            "profile_use_background_image": false,
+            "protected": false,
+            "screen_name": "nontiyatanoi",
+            "statuses_count": 6634,
+            "time_zone": null,
+            "translator_type": "none",
+            "url": "https://t.co/av1P3O2dhl",
+            "utc_offset": null,
+            "verified": false
+        }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "RT @nontiyatanoi: \u0e40\u0e01\u0e47\u0e1a\u0e15\u0e01\u0e20\u0e32\u0e1e\u0e1a\u0e23\u0e23\u0e22\u0e32\u0e01\u0e32\u0e28\u0e07\u0e32\u0e19\u0e41\u0e16\u0e25\u0e07\u0e02\u0e48\u0e32\u0e27 #BoyfriendsGMM \u0e1e\u0e35\u0e48\u0e40\u0e02\u0e32\u0e1a\u0e2d\u0e01\u0e27\u0e48\u0e32\u0e43\u0e2b\u0e49\u0e16\u0e48\u0e32\u0e22\u0e21\u0e32\u0e43\u0e2b\u0e49\u0e04\u0e23\u0e1a\u0e17\u0e38\u0e01\u0e04\u0e19\u0e19\u0e30 \u0e41\u0e15\u0e48\u0e27\u0e2d\u0e23\u0e4c\u0e19\u0e48\u0e32\u0e23\u0e31\u0e01\u0e08\u0e19\u0e43\u0e08\u0e40\u0e08\u0e47\u0e1a \u0e2a\u0e23\u0e38\u0e1b\u0e04\u0e37\u0e2d \u0e21\u0e35\u0e41\u0e15\u0e48\u0e23\u0e39\u0e1b\u0e27\u0e2d\u0e23\u0e4c\u2026",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 08:44:43 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1108781876750241794,
+                "id_str": "1108781876750241794",
+                "indices": [
+                    0,
+                    8
+                ],
+                "name": "Chanie",
+                "screen_name": "pure956"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311950227243401217,
+    "id_str": "1311950227243401217",
+    "in_reply_to_screen_name": "pure956",
+    "in_reply_to_status_id": 1311949437325910017,
+    "in_reply_to_status_id_str": "1311949437325910017",
+    "in_reply_to_user_id": 1108781876750241794,
+    "in_reply_to_user_id_str": "1108781876750241794",
+    "is_quote_status": false,
+    "lang": "vi",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@pure956 B\u1ea3o \u00f4ng sn 2k c\u00f2n d\u1ec5 tin h\u01a1n :)))))))",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 08:38:21 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1108781876750241794,
+                "id_str": "1108781876750241794",
+                "indices": [
+                    0,
+                    8
+                ],
+                "name": "Chanie",
+                "screen_name": "pure956"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311948624356663297,
+    "id_str": "1311948624356663297",
+    "in_reply_to_screen_name": "pure956",
+    "in_reply_to_status_id": 1311947997912027136,
+    "in_reply_to_status_id_str": "1311947997912027136",
+    "in_reply_to_user_id": 1108781876750241794,
+    "in_reply_to_user_id_str": "1108781876750241794",
+    "is_quote_status": false,
+    "lang": "vi",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@pure956 Fake maknae l\u00e0m ai c\u0169ng s\u1ed1c khi bi\u1ebft tu\u1ed5i th\u1eadt :)))))",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 07:46:56 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "media": [
+            {
+                "display_url": "pic.twitter.com/OwYnB7NOI2",
+                "expanded_url": "https://twitter.com/laoloveswar/status/1311935685570498560/photo/1",
+                "id": 1311935678293446657,
+                "id_str": "1311935678293446657",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/tweet_video_thumb/EjTujGjXkAEdih0.jpg",
+                "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EjTujGjXkAEdih0.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "medium": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "small": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "type": "photo",
+                "url": "https://t.co/OwYnB7NOI2"
+            }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1259170935099109376,
+                "id_str": "1259170935099109376",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "\ud83c\udf39Special for Y-W",
+                "screen_name": "SpecialforYW"
+            }
+        ]
+    },
+    "extended_entities": {
+        "media": [
+            {
+                "display_url": "pic.twitter.com/OwYnB7NOI2",
+                "expanded_url": "https://twitter.com/laoloveswar/status/1311935685570498560/photo/1",
+                "id": 1311935678293446657,
+                "id_str": "1311935678293446657",
+                "indices": [
+                    47,
+                    70
+                ],
+                "media_url": "http://pbs.twimg.com/tweet_video_thumb/EjTujGjXkAEdih0.jpg",
+                "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EjTujGjXkAEdih0.jpg",
+                "sizes": {
+                    "large": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "medium": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "small": {
+                        "h": 400,
+                        "resize": "fit",
+                        "w": 458
+                    },
+                    "thumb": {
+                        "h": 150,
+                        "resize": "crop",
+                        "w": 150
+                    }
+                },
+                "type": "animated_gif",
+                "url": "https://t.co/OwYnB7NOI2",
+                "video_info": {
+                    "aspect_ratio": [
+                        229,
+                        200
+                    ],
+                    "variants": [
+                        {
+                            "bitrate": 0,
+                            "content_type": "video/mp4",
+                            "url": "https://video.twimg.com/tweet_video/EjTujGjXkAEdih0.mp4"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1311935685570498560,
+    "id_str": "1311935685570498560",
+    "in_reply_to_screen_name": "SpecialforYW",
+    "in_reply_to_status_id": 1311935350650986496,
+    "in_reply_to_status_id_str": "1311935350650986496",
+    "in_reply_to_user_id": 1259170935099109376,
+    "in_reply_to_user_id_str": "1259170935099109376",
+    "is_quote_status": false,
+    "lang": "vi",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@SpecialforYW \u0110i \u0111\u00e2u th\u00ec c\u0169ng l\u00e0 e b\u00e9 c\u1ea3 :)))) https://t.co/OwYnB7NOI2",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 07:39:42 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1259170935099109376,
+                "id_str": "1259170935099109376",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "\ud83c\udf39Special for Y-W",
+                "screen_name": "SpecialforYW"
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1311933866542858240,
+    "id_str": "1311933866542858240",
+    "in_reply_to_screen_name": "SpecialforYW",
+    "in_reply_to_status_id": 1311933044329127938,
+    "in_reply_to_status_id_str": "1311933044329127938",
+    "in_reply_to_user_id": 1259170935099109376,
+    "in_reply_to_user_id_str": "1259170935099109376",
+    "is_quote_status": false,
+    "lang": "vi",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@SpecialforYW \u00d4i h\u00f4m h\u1ecdp b\u00e1o gmm \u1ea5y r\u00f5 nhi\u1ec1u moment lu\u00f4n \u1ea5y nh\u01b0ng c\u1ee7a ch\u00fa kao l\u00e0 nh\u00ecn y\u00eau nh\u1ea5t :)))))",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 07:33:43 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+            {
+                "id": 1259170935099109376,
+                "id_str": "1259170935099109376",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "\ud83c\udf39Special for Y-W",
+                "screen_name": "SpecialforYW"
+            }
+        ]
+    },
+    "favorite_count": 1,
+    "favorited": false,
+    "geo": null,
+    "id": 1311932356631109637,
+    "id_str": "1311932356631109637",
+    "in_reply_to_screen_name": "SpecialforYW",
+    "in_reply_to_status_id": 1311931452850724864,
+    "in_reply_to_status_id_str": "1311931452850724864",
+    "in_reply_to_user_id": 1259170935099109376,
+    "in_reply_to_user_id_str": "1259170935099109376",
+    "is_quote_status": false,
+    "lang": "vi",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@SpecialforYW Soi l\u00e0 ngh\u1ec1 r\u00f9i m\u1ed7i t\u1ed9i cut clip mu\u1ed1n l\u00f2i con m\u1eaft \ud83d\ude02",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}{
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Fri Oct 02 07:31:37 +0000 2020",
+    "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+            {
+                "display_url": "youtu.be/-VeAUgO8Wtg",
+                "expanded_url": "https://youtu.be/-VeAUgO8Wtg",
+                "indices": [
+                    34,
+                    57
+                ],
+                "url": "https://t.co/3SRMBlg7MS"
+            }
+        ],
+        "user_mentions": [
+            {
+                "id": 1311460119423541248,
+                "id_str": "1311460119423541248",
+                "indices": [
+                    0,
+                    13
+                ],
+                "name": "nellovesguys",
+                "screen_name": "nellovesguys"
+            },
+            {
+                "id": 1267651481882071041,
+                "id_str": "1267651481882071041",
+                "indices": [
+                    14,
+                    25
+                ],
+                "name": "G \ud83c\udf3c",
+                "screen_name": "ggggannnnn"
+            }
+        ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "geo": null,
+    "id": 1311931831009390597,
+    "id_str": "1311931831009390597",
+    "in_reply_to_screen_name": "nellovesguys",
+    "in_reply_to_status_id": 1311930985810817024,
+    "in_reply_to_status_id_str": "1311930985810817024",
+    "in_reply_to_user_id": 1311460119423541248,
+    "in_reply_to_user_id_str": "1311460119423541248",
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "text": "@nellovesguys @ggggannnnn Here is https://t.co/3SRMBlg7MS",
+    "truncated": false,
+    "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jul 01 15:57:50 +0000 2018",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "",
+        "entities": {
+            "description": {
+                "urls": []
+            }
+        },
+        "favourites_count": 132372,
+        "follow_request_sent": false,
+        "followers_count": 62,
+        "following": false,
+        "friends_count": 402,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 1013451621580267520,
+        "id_str": "1013451621580267520",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 0,
+        "location": "",
+        "name": "lao",
+        "notifications": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1013451621580267520/1601571986",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1311714040117432322/ZXUIM9xl_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "laoloveswar",
+        "statuses_count": 562,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": null,
+        "utc_offset": null,
+        "verified": false
+    }
+}

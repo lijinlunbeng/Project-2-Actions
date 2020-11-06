@@ -1,0 +1,79 @@
+from google.cloud import language
+from google.cloud.language import enums, types
+
+
+def analyze_text_syntax(text):
+    client = language.LanguageServiceClient()
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT)
+
+    response = client.analyze_syntax(document=document)
+
+    fmts = '{:10}: {}'
+    print(fmts.format('sentences', len(response.sentences)))
+    print(fmts.format('tokens', len(response.tokens)))
+    for token in response.tokens:
+        part_of_speech_tag = enums.PartOfSpeech.Tag(token.part_of_speech.tag)
+        print(fmts.format(part_of_speech_tag.name, token.text.content))
+
+
+//Test my content
+text = 'This whole thread is such a mood. I always feel happy when stanning thai star cause their fandom r so chill and fun. But now its 
+gradually becoming toxic, even more than kpop or cpop. Especialy those unnecessary fanwars and bashing every girl near their bias'
+analyze_text_syntax(text)
+
+
+//Results
+sentences : 4
+tokens    : 50
+DET       : This
+ADJ       : whole
+NOUN      : thread
+VERB      : is
+DET       : such
+DET       : a
+NOUN      : mood
+PUNCT     : .
+PRON      : I
+ADV       : always
+VERB      : feel
+ADJ       : happy
+ADV       : when
+VERB      : stanning
+NOUN      : thai
+NOUN      : star
+ADP       : cause
+PRON      : their
+NOUN      : fandom
+NOUN      : r
+ADV       : so
+ADJ       : chill
+CONJ      : and
+NOUN      : fun
+PUNCT     : .
+CONJ      : But
+ADV       : now
+PRON      : its
+ADV       : gradually
+VERB      : becoming
+ADJ       : toxic
+PUNCT     : ,
+ADV       : even
+ADJ       : more
+ADP       : than
+NOUN      : kpop
+CONJ      : or
+NOUN      : cpop
+PUNCT     : .
+NOUN      : Especialy
+DET       : those
+ADJ       : unnecessary
+NOUN      : fanwars
+CONJ      : and
+VERB      : bashing
+DET       : every
+NOUN      : girl
+ADP       : near
+PRON      : their
+NOUN      : bias
