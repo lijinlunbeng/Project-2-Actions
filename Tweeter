@@ -8,10 +8,10 @@ import json
 
 
 #Twitter API credentials
-consumer_key = "yOn8TiBcEIO6jQGHDoaVXQOy0"
-consumer_secret = "jgJU47p5tKTzkLFt9fXhNrGpW4KPfioq0fDi8to1vgjiuZ3eQT"
-access_key = "1309951984741412864-Bwa61zLFSTYizyW03plTkG7nxfxSsT"
-access_secret = "HVF3588kI4IHvmFSG31VkXMD0y3eYdXOojtnHmTWKOmmF"
+CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+CONSUMER_SECRET:  ${{ secrets.CONSUMER_SECRET }} 
+ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
 
 
 def get_all_tweets(screen_name):
